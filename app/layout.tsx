@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import { normalizeSiteUrl } from "@/lib/env";
 import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://ripple-hq.netlify.app"
+    normalizeSiteUrl(
+      process.env.NEXT_PUBLIC_SITE_URL ?? "https://ripple-hq.netlify.app"
+    )
   ),
   title: {
     default: "Ripple — Supply chain risk alerts for small manufacturers",

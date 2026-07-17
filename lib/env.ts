@@ -16,11 +16,25 @@ function optional(name: string, fallback = ""): string {
   return process.env[name] ?? fallback;
 }
 
+/**
+ * Normalise a site URL: prepend https:// when a scheme is missing and strip any
+ * trailing slash. Guards against a host-only NEXT_PUBLIC_SITE_URL (e.g.
+ * "ripplescan.netlify.app") crashing `new URL()` during the build.
+ */
+export function normalizeSiteUrl(raw: string): string {
+  const trimmed = raw.trim();
+  const withScheme = /^https?:\/\//i.test(trimmed)
+    ? trimmed
+    : `https://${trimmed}`;
+  return withScheme.replace(/\/+$/, "");
+}
+
 export const env = {
   // Public — safe to inline into client bundles.
   supabaseUrl: () => required("NEXT_PUBLIC_SUPABASE_URL"),
   supabaseAnonKey: () => required("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
-  siteUrl: () => optional("NEXT_PUBLIC_SITE_URL", "http://localhost:3000"),
+  siteUrl: () =>
+    normalizeSiteUrl(optional("NEXT_PUBLIC_SITE_URL", "http://localhost:3000")),
 
   // Server-only secrets.
   supabaseServiceRoleKey: () => required("SUPABASE_SERVICE_ROLE_KEY"),
