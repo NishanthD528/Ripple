@@ -1,0 +1,14 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Daily ingestion pipeline. Runs at 09:00 UTC (early morning US).
+[functions."ingest"]
+  schedule = "0 9 * * *"
+
+[functions]
+  # The pipeline can run long; give scheduled functions headroom.
+  node_bundler = "esbuild"
