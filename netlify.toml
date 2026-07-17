@@ -2,6 +2,11 @@
   command = "npm run build"
   publish = ".next"
 
+[build.environment]
+  # Pin to Node 20 LTS. Netlify's default (Node 24) is not a supported runtime
+  # for this Next.js 14 toolchain and fails the build.
+  NODE_VERSION = "20"
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
